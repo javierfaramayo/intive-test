@@ -50,6 +50,25 @@ class BikeRentalTest(unittest.TestCase):
     def test_rent_bike_valid_amount_invalid_rental_type(self):
         self.assertFalse(self.rental.rent_bike(5, 4))
 
+    def test_return_bike_incorrect_data(self):
+
+        # Incorrect amount of bikes, negative number
+        self.assertFalse(self.rental.return_bike(-3, RENTAL_TYPES['PER_HOUR'], datetime.now() + timedelta(hours=-1)))
+        self.assertEqual(self.rental.get_stock(), 10)
+
+        # Incorrect amount of bikes, zero number
+        self.assertFalse(self.rental.return_bike(0, RENTAL_TYPES['PER_DAY'], datetime.now() + timedelta(hours=-1)))
+        self.assertEqual(self.rental.get_stock(), 10)
+
+        # Incorrect rental type
+        self.assertFalse(self.rental.return_bike(5, 4, datetime.now() + timedelta(hours=-1)))
+        self.assertEqual(self.rental.get_stock(), 10)
+
+        # Incorrect datetime
+        self.assertFalse(self.rental.return_bike(5, RENTAL_TYPES['PER_HOUR'], None))
+        self.assertEqual(self.rental.get_stock(), 10)
+
+
 
 if __name__ == '__main__':
     unittest.main()
